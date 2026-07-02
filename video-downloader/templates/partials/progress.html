@@ -1,0 +1,24 @@
+<div class="bg-slate-800/60 backdrop-blur rounded-2xl p-6 shadow-xl border border-slate-700"
+     id="progress-container"
+     hx-get="/progress/{{ job_id }}"
+     hx-trigger="every 2s"
+     hx-swap="outerHTML">
+
+    <div class="flex items-center justify-between mb-2">
+        <p class="font-medium">
+            {% if status == 'processing' %}
+                Process ho raha hai (audio/video merge)...
+            {% else %}
+                Download ho raha hai...
+            {% endif %}
+        </p>
+        <span class="text-blue-400 font-semibold">{{ percent or 0 }}%</span>
+    </div>
+
+    <div class="w-full bg-slate-700 rounded-full h-3 overflow-hidden">
+        <div class="bg-blue-600 h-3 rounded-full transition-all duration-500"
+             style="width: {{ percent or 0 }}%"></div>
+    </div>
+
+    <p class="text-slate-500 text-xs mt-3">Yeh page khud-ba-khud update ho raha hai, please wait...</p>
+</div>

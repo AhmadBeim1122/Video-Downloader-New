@@ -1,0 +1,46 @@
+<div class="bg-slate-800/60 backdrop-blur rounded-2xl p-6 shadow-xl border border-slate-700 animate-fade-in">
+
+    <div class="flex gap-4 mb-5">
+        {% if info.thumbnail %}
+        <img src="{{ info.thumbnail }}" alt="thumbnail" class="w-32 h-20 object-cover rounded-lg flex-shrink-0">
+        {% endif %}
+        <div class="min-w-0">
+            <h3 class="font-semibold text-lg truncate">{{ info.title }}</h3>
+            <p class="text-slate-400 text-sm">{{ info.uploader }}</p>
+            {% if info.duration %}
+            <p class="text-slate-500 text-xs mt-1">{{ (info.duration // 60) }} min {{ (info.duration % 60) }} sec</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <p class="text-slate-300 text-sm mb-3 font-medium">Format/Quality select karein:</p>
+
+    <form hx-post="/download" hx-target="#result-area" hx-swap="innerHTML">
+        <input type="hidden" name="url" value="{{ info.url }}">
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-4">
+            {% for f in info.formats %}
+            <label class="format-option">
+                <input
+                    type="radio"
+                    name="format_choice"
+                    value="{{ f.format_id }}|{{ f.type }}"
+                    {% if loop.first %}checked{% endif %}
+                    onchange="document.getElementById('format_id').value='{{ f.format_id }}'; document.getElementById('format_type').value='{{ f.type }}';"
+                    class="peer hidden"
+                >
+                <div class="cursor-pointer text-center border border-slate-600 rounded-lg py-2 px-3 peer-checked:border-blue-500 peer-checked:bg-blue-600/20 hover:bg-slate-700/50 transition text-sm">
+                    {% if f.type == 'audio' %}🎵{% else %}🎬{% endif %} {{ f.label }}
+                </div>
+            </label>
+            {% endfor %}
+        </div>
+
+        <input type="hidden" id="format_id" name="format_id" value="{{ info.formats[0].format_id }}">
+        <input type="hidden" id="format_type" name="format_type" value="{{ info.formats[0].type }}">
+
+        <button type="submit" class="w-full bg-green-600 hover:bg-green-700 transition py-3 rounded-lg font-semibold">
+            ⬇ Download Shuru Karein
+        </button>
+    </form>
+</div>
